@@ -1,0 +1,11 @@
+<?php
+/**
+ * @author Stan Gumeniuk i@vigo.su
+ */
+
+require_once __DIR__ . '/controller/index.php';
+require_once __DIR__ . '/controller/error.php';
+
+require_once __DIR__ . '/framework/config.php';
+require_once __DIR__ . '/framework/router.php';
+require_once __DIR__ . '/framework/request.php';
