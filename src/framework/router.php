@@ -55,6 +55,7 @@ function framework_router_checkExistControllerAction(Array $uri)
 
 function framework_router_runControllerActionByUri(Array $uri)
 {
+    framework_profiler_startProfileEvent('framework_router_runControllerActionByUri');
     $uri = framework_router_parseControllerAndAction($uri);
     if (!framework_router_checkExistControllerAction($uri)) {
         $uri = framework_router_parseControllerAndAction(
@@ -67,15 +68,18 @@ function framework_router_runControllerActionByUri(Array $uri)
             die('500');
         }
     }
-
+    framework_profiler_stopProfileEvent('framework_router_runControllerActionByUri');
     call_user_func(framework_router_createFunctuinNameByUri($uri));
 }
 
 function framework_router_run()
 {
+
+    framework_profiler_startProfileEvent('framework_router_run');
     framework_router_runControllerActionByUri(
         framework_router_parseControllerAndAction(
             framework_router_parseUriViaNginxReconfig()
         )
     );
+    framework_profiler_stopProfileEvent('framework_router_run');
 }

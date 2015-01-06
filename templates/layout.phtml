@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title></title>
+</head>
+<body>
+<?= isset($container)?$container:'' ?>
+
+<?php if (defined('FIDEOS_PROFILER_ENABLED') && FIDEOS_PROFILER_ENABLED) : ?>
+<div class="profiler">
+       <?= framework_profiler_getProfileDataHtml(); ?>
+</div>
+
+<?php endif; ?>
+</body>
+</html>
