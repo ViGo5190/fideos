@@ -24,7 +24,7 @@ function framework_router_parseUriViaNginxReconfig()
 function framework_router_parseControllerAndAction(Array $uri)
 {
     if (empty($uri['controller'])) {
-        $uri['controller'] = 'index';
+        $uri['controller'] = 'page';
     }
 
     if (empty($uri['action'])) {

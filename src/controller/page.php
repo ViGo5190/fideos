@@ -3,15 +3,15 @@
  * @author Stan Gumeniuk i@vigo.su
  */
 
-function controller_index_index()
+function controller_page_index()
 {
     $c = framework_template_compileTemplate('layout', array(
-        'container' => 'index!!',
+        'container' => 'Hello, world!',
     ));
     framework_response_setContent($c);
 }
 
-function controller_index_foo()
+function controller_page_foo()
 {
     framework_response_setContent('foo!!');
 }

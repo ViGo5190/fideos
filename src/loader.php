@@ -3,7 +3,7 @@
  * @author Stan Gumeniuk i@vigo.su
  */
 
-require_once __DIR__ . '/controller/index.php';
+require_once __DIR__ . '/controller/page.php';
 require_once __DIR__ . '/controller/error.php';
 
 require_once __DIR__ . '/framework/config.php';

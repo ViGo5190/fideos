@@ -33,9 +33,9 @@ function framework_profiler_stopProfileEvent($eventName)
     }
 
     $startTime = $_ENV[FIDEOS_PROFILER_ENV_PREFIX][$eventName]['time'];
-    $_ENV[FIDEOS_PROFILER_ENV_PREFIX][$eventName]['timeEnd'] = round((microtime(true) - $startTime) * 1000, 0);
+    $_ENV[FIDEOS_PROFILER_ENV_PREFIX][$eventName]['timeTotal'] = round((microtime(true) - $startTime) * 1000, 0);
     $startMemory = $_ENV[FIDEOS_PROFILER_ENV_PREFIX][$eventName]['memory'];
-    $_ENV[FIDEOS_PROFILER_ENV_PREFIX][$eventName]['memoryEnd'] = memory_get_usage(true) - $startMemory;
+    $_ENV[FIDEOS_PROFILER_ENV_PREFIX][$eventName]['memoryTotal'] = memory_get_usage(true) - $startMemory;
 }
 
 function framework_profiler_getProfileData()
