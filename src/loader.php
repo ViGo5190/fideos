@@ -3,8 +3,9 @@
  * @author Stan Gumeniuk i@vigo.su
  */
 
-require_once __DIR__ . '/controller/page.php';
 require_once __DIR__ . '/controller/error.php';
+require_once __DIR__ . '/controller/page.php';
+require_once __DIR__ . '/controller/game.php';
 
 require_once __DIR__ . '/framework/config.php';
 require_once __DIR__ . '/framework/profiler.php';
