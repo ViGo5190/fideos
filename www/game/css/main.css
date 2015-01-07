@@ -120,6 +120,10 @@ input.gametable {
 
 }
 
+.gametable-cell-filled{
+
+}
+
 .hidden{
     display: none;
 }

@@ -24,6 +24,9 @@
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
 
+    <script src="/js/jquery.js"></script>
+    <script src="/game/js/main.js?<?php rand(0, 10000); ?>"></script>
+
 </head>
 
 <body>
@@ -37,11 +40,11 @@
 
 
     <div class="divgametable">
-        <table class="gametable">
+        <table class="gametable" id="gametable">
             <?php  (isset($gameTable)) ? $gameTableOk = $gameTable : $gameTableOk = array(
-                '1' => array('1' => "1", '2' => "", '3' => "", '4' => "", '5' => ""),
+                '1' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
                 '2' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
-                '3' => array('1' => "с", '2' => "л", '3' => "о", '4' => "в", '5' => "о"),
+                '3' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
                 '4' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
                 '5' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
             ); ?>
@@ -51,7 +54,7 @@
             <?php foreach ($gameTableOk as $rowNumber => $row): ?>
                 <tr>
                     <?php foreach ($row as $cellNumber => $cell): ?>
-                        <td>
+                        <td id="gametable-cell-<?=$rowNumber;?>-<?=$cellNumber;?>">
 
                             <div class="gametable-input hidden">
                                 <input type="text" maxlength="1" class="gametable" value="<?= $cell; ?>">
