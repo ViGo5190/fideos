@@ -54,7 +54,7 @@
             <?php foreach ($gameTableOk as $rowNumber => $row): ?>
                 <tr>
                     <?php foreach ($row as $cellNumber => $cell): ?>
-                        <td id="gametable-cell-<?=$rowNumber;?>-<?=$cellNumber;?>">
+                        <td id="gametable-cell-<?= $rowNumber; ?>-<?= $cellNumber; ?>" class="gametable-td-cell">
 
                             <div class="gametable-input hidden">
                                 <input type="text" maxlength="1" class="gametable" value="<?= $cell; ?>">
@@ -83,9 +83,54 @@
 
 </div>
 
+<?php if (defined('FIDEOS_PROFILER_ENABLED') && FIDEOS_PROFILER_ENABLED) : ?>
+    <div class="profiler">
+        <?= framework_profiler_getProfileDataHtml(); ?>
+    </div>
 
-<div class="profiler"></div>
+<?php endif; ?>
 
+
+<!--<div class="profiler"></div>-->
+
+
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function () {
+            try {
+                w.yaCounter24592760 = new Ya.Metrika({
+                    id: 24592760,
+                    webvisor: true,
+                    clickmap: true,
+                    trackLinks: true,
+                    accurateTrackBounce: true,
+                    trackHash: true
+                });
+            } catch (e) {
+            }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () {
+                n.parentNode.insertBefore(s, n);
+            };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else {
+            f();
+        }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript>
+    <div><img src="//mc.yandex.ru/watch/24592760" style="position:absolute; left:-9999px;" alt=""/></div>
+</noscript>
+<!-- /Yandex.Metrika counter -->
 
 </body>
 </html>

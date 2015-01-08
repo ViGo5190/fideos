@@ -10,14 +10,7 @@ body {
     /*background: #18bc9c;*/
     display: block;
 
-
     padding-top: 100px;
-    /*padding-bottom: 50px;*/
-
-    /*padding-right: 30px;*/
-    /*padding-left: 30px;*/
-    /*margin-right: 100px;*/
-    /*margin-left: 100px;*/
 }
 
 .header {
@@ -30,10 +23,9 @@ body {
     min-height: 60px;
     margin-bottom: 21px;
 
-
 }
 
-.header-container{
+.header-container {
     margin-right: auto;
     margin-left: auto;
     padding-left: 15px;
@@ -56,6 +48,7 @@ table.gametable {
     display: table;
     border-collapse: collapse;
     margin: 0 auto;
+    color: #fff;
 }
 
 table.gametable tr {
@@ -90,7 +83,6 @@ table.gametable tr td {
     text-align: center;
 }
 
-
 input.gametable {
     background: #18bc9c;
     /*width: 100%;*/
@@ -101,8 +93,6 @@ input.gametable {
     -moz-box-sizing: border-box;
     -webkit-box-sizing: border-box;
 
-
-
     height: 100%;
     width: 100%;
     padding: 0;
@@ -111,19 +101,17 @@ input.gametable {
     font-size: 1em;
 }
 
-
 .gametable-input {
+}
+
+.gametable-cell {
 
 }
 
-.gametable-cell{
+.gametable-cell-filled {
 
 }
 
-.gametable-cell-filled{
-
-}
-
-.hidden{
+.hidden {
     display: none;
 }
