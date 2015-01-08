@@ -30,61 +30,64 @@
 </head>
 
 <body>
+<div class='body-feel'>
 
-
-<div class="header">
-    <div class="header-container">header</div>
-</div>
-
-<div class="container">
-
-
-    <div class="divgametable">
-        <table class="gametable" id="gametable">
-            <?php  (isset($gameTable)) ? $gameTableOk = $gameTable : $gameTableOk = array(
-                '1' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
-                '2' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
-                '3' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
-                '4' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
-                '5' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
-            ); ?>
-
-
-            <tbody>
-            <?php foreach ($gameTableOk as $rowNumber => $row): ?>
-                <tr>
-                    <?php foreach ($row as $cellNumber => $cell): ?>
-                        <td id="gametable-cell-<?= $rowNumber; ?>-<?= $cellNumber; ?>" class="gametable-td-cell">
-
-                            <div class="gametable-input hidden">
-                                <input type="text" maxlength="1" class="gametable" value="<?= $cell; ?>">
-                            </div>
-                            <div class="gametable-cell">
-                                <?= $cell; ?>
-                            </div>
-                        </td>
-                    <?php endforeach; ?>
-
-
-                </tr>
-            <?php endforeach; ?>
-
-
-            </tbody>
-        </table>
+    <div class="header">
+        <div class="header-container">header</div>
     </div>
 
-    <footer>
-        <div class="footer">
-            <p>Copyright &copy; Stan Gumeniuk 2015</p>
+    <div class="container">
+
+
+        <div class="divgametable">
+            <table class="gametable" id="gametable">
+                <?php  (isset($gameTable)) ? $gameTableOk = $gameTable : $gameTableOk = array(
+                    '1' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
+                    '2' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
+                    '3' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
+                    '4' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
+                    '5' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
+                ); ?>
+
+
+                <tbody>
+                <?php foreach ($gameTableOk as $rowNumber => $row): ?>
+                    <tr>
+                        <?php foreach ($row as $cellNumber => $cell): ?>
+                            <td id="gametable-cell-<?= $rowNumber; ?>-<?= $cellNumber; ?>" class="gametable-td-cell">
+
+                                <div class="gametable-input hidden">
+                                    <input type="text" maxlength="1" class="gametable" value="<?= $cell; ?>">
+                                </div>
+                                <div class="gametable-cell">
+                                    <?= $cell; ?>
+                                </div>
+                            </td>
+                        <?php endforeach; ?>
+
+
+                    </tr>
+                <?php endforeach; ?>
+
+
+                </tbody>
+            </table>
         </div>
-    </footer>
+
+        <footer>
+            <div class="footer">
+                <p>Copyright &copy; Stan Gumeniuk 2015</p>
+            </div>
+        </footer>
+
+
+    </div>
 
 
 </div>
-
 <?php if (defined('FIDEOS_PROFILER_ENABLED') && FIDEOS_PROFILER_ENABLED) : ?>
     <div class="profiler">
+        <hr class="white">
         <?= framework_profiler_getProfileDataHtml(); ?>
     </div>
 
