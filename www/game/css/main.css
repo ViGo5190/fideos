@@ -152,3 +152,9 @@ hr.white{
     border-color: rgb(255, 255, 255);
 }
 
+
+.gametable-td-cell-selected {
+    color:red;
+    border-color: red;
+}
+

@@ -6,6 +6,8 @@
 function FideosGame() {
     this.game = $("#gametable");
     this.table = {};
+    this.status = 'user_empty'; //user_empty, user_wait, user_filled, user_checked, user_send, user_ok
+    this.word = [];
 }
 
 FideosGame.prototype.init = function () {
@@ -19,8 +21,8 @@ FideosGame.prototype.makeTableListen = function () {
     var self = this;
 
     $('.gametable-td-cell').each(function (idx, el) {
-            $(el).bind("click", {el: el}, self.cellClick);
-            $('.gametable-input > input', el).bind("keyup", {el: el}, self.keyUp);
+            $(el).bind("click", {el: el, context: self}, self.cellClick);
+            $('.gametable-input > input', el).bind("keyup", {el: el, context: self}, self.keyUp);
         }
     );
 
@@ -28,9 +30,15 @@ FideosGame.prototype.makeTableListen = function () {
 };
 
 
+FideosGame.prototype.setStatus = function (status) {
+    var self = this;
+    self.status = status;
+};
+
 FideosGame.prototype.keyUp = function (e) {
     var data = e.data;
     var el = $(data.el);
+    var self = data.context;
 
     if ($(el).hasClass('gametable-td-cell-wait')) {
 
@@ -39,16 +47,24 @@ FideosGame.prototype.keyUp = function (e) {
         $('.gametable-cell', el).removeClass('hidden');
         $('.gametable-input', el).addClass('hidden');
         $(el).removeClass('gametable-td-cell-wait').addClass('gametable-td-cell-pressed')
+        self.setStatus('user_filled');
+
     }
 
 };
 
+
 FideosGame.prototype.cellClick = function (e) {
     var data = e.data;
     var el = $(data.el);
+    var self = data.context;
 
     if (el.hasClass('gametable-td-cell-empty')) {
         console.log('click:' + el.attr('id'));
+
+
+        $('.gametable-td-cell').removeClass('gametable-td-cell-selected');
+        self.word = [];
 
         $('.gametable-cell', '.gametable-td-cell-pressed').html('');
         $('.gametable-input > input', '.gametable-td-cell-pressed').val('');
@@ -62,11 +78,74 @@ FideosGame.prototype.cellClick = function (e) {
         $('.gametable-cell', el).addClass('hidden');
         $('.gametable-input', el).removeClass('hidden').focus();
         $('.gametable-input > input', el).focus();
-        el.removeClass('gametable-td-cell-empty').addClass('gametable-td-cell-wait')
+        el.removeClass('gametable-td-cell-empty').addClass('gametable-td-cell-wait');
 
 
+        self.setStatus('user_wait');
+
+    } else if ((el.hasClass('gametable-td-cell-filled')) || (el.hasClass('gametable-td-cell-pressed'))) {
+        if (self.status == 'user_filled') {
+            //console.log('select: ' + el.attr('id'));
+
+
+            self.addCellToWord(el, self);
+
+        } else if (self.status == 'user_wait') {
+            self.setStatus('user_empty');
+        }
     }
 
+
+};
+
+
+FideosGame.prototype.addCellToWord = function (cell, context) {
+    var self = context;
+
+    var wordLength = self.word.length;
+
+
+    var id = cell.attr('id');
+
+
+    re = /gametable-cell-(\d)-(\d)/i;
+    found = id.match(re);
+    var x = parseInt(found[1], 10); //row
+    var y = parseInt(found[2], 10); //cell
+
+    var letter = {};
+
+
+    letter.x = x;
+    letter.y = y;
+    letter.val = $('.gametable-cell', cell).html();
+
+    console.log(x);
+    console.log(y);
+
+
+    if (wordLength > 0) {
+        var prevLetter = self.word[self.word.length - 1];
+
+
+        if ((prevLetter.x == letter.x) && ( (prevLetter.y == letter.y - 1) || (prevLetter.y == letter.y + 1) )) {
+            self.word.push(letter);
+            cell.addClass('gametable-td-cell-selected');
+            console.log('xxx');
+        } else if ((prevLetter.y == letter.y) && ( (prevLetter.x == letter.x - 1) || (prevLetter.x == letter.x + 1) )) {
+            self.word.push(letter);
+            cell.addClass('gametable-td-cell-selected');
+            console.log('yyy');
+        }
+
+
+    } else {
+        self.word.push(letter);
+        cell.addClass('gametable-td-cell-selected');
+    }
+
+
+    console.log(self.word);
 
 };
 
