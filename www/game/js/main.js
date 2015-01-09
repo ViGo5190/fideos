@@ -127,15 +127,32 @@ FideosGame.prototype.addCellToWord = function (cell, context) {
     if (wordLength > 0) {
         var prevLetter = self.word[self.word.length - 1];
 
+        var lettersInWordWithSameXY = $.grep(self.word, function (n, i) {
+            return (n.x == letter.x && n.y == letter.y);
+        });
 
-        if ((prevLetter.x == letter.x) && ( (prevLetter.y == letter.y - 1) || (prevLetter.y == letter.y + 1) )) {
+        var lettersInWordCount = lettersInWordWithSameXY.length;
+
+        if (
+            (lettersInWordCount == 0) &&
+            (prevLetter.x == letter.x) &&
+            ( (prevLetter.y == letter.y - 1) || (prevLetter.y == letter.y + 1) )
+        ) {
             self.word.push(letter);
             cell.addClass('gametable-td-cell-selected');
             console.log('xxx');
-        } else if ((prevLetter.y == letter.y) && ( (prevLetter.x == letter.x - 1) || (prevLetter.x == letter.x + 1) )) {
+        } else if (
+            (lettersInWordCount == 0) &&
+            (prevLetter.y == letter.y) &&
+            ( (prevLetter.x == letter.x - 1) || (prevLetter.x == letter.x + 1) )
+        ) {
             self.word.push(letter);
             cell.addClass('gametable-td-cell-selected');
             console.log('yyy');
+        } else if ((prevLetter.y == letter.y) && (prevLetter.x == letter.x)) {
+            self.word.pop();
+            cell.removeClass('gametable-td-cell-selected');
+            console.log('rem');
         }
 
 
