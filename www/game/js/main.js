@@ -3,9 +3,25 @@
  */
 
 
+
+function FideosTable() {
+    this.table = [[], [], [], [], []];
+}
+
+FideosTable.prototype.init = function () {
+
+};
+
+FideosTable.prototype.addCell = function (x, y, letter) {
+    var self = this;
+
+    self.table[x - 1][y - 1] = {letter: letter};
+};
+
 function FideosGame() {
     this.game = $("#gametable");
-    this.table = {};
+    //this.table = {};
+    this.table = new FideosTable();
     this.status = 'user_empty'; //user_empty, user_wait, user_filled, user_checked, user_send, user_ok
     this.word = [];
 }
@@ -13,7 +29,9 @@ function FideosGame() {
 FideosGame.prototype.init = function () {
     var self = this;
 
-    self.loadTable().renderTable().makeTableListen();
+    self.renderTable(self.loadTable());
+    self.makeTableListen().makeButtonListen();
+    self.updateButtonStatus();
 };
 
 
@@ -26,13 +44,47 @@ FideosGame.prototype.makeTableListen = function () {
         }
     );
 
-
+    return self;
 };
 
+FideosGame.prototype.makeButtonListen = function () {
+    var self = this;
+
+    $('#game-check-button').bind('click', {context: self}, self.checkButtonClick);
+
+    return self;
+};
+
+
+FideosGame.prototype.checkButtonClick = function (e) {
+    var self = e.data.context;
+    alert('fff');
+};
 
 FideosGame.prototype.setStatus = function (status) {
     var self = this;
     self.status = status;
+
+    self.updateButtonStatus(self.status);
+};
+
+FideosGame.prototype.updateButtonStatus = function () {
+    var self = this;
+    var status = self.status;
+
+    if (status == 'user_empty') {
+        $('#game-check-button').html('Выберите ячейку');
+        $('#game-check-button').attr('disabled', 'disabled');
+    } else if (status == 'user_wait') {
+        $('#game-check-button').html('Вставьте букву');
+        $('#game-check-button').attr('disabled', 'disabled');
+    } else if (status == 'user_filled') {
+        $('#game-check-button').html('Выделите слово');
+        $('#game-check-button').attr('disabled', 'disabled');
+    } else if (status == 'user_checked') {
+        $('#game-check-button').html('Отправить слово');
+        $('#game-check-button').removeAttr('disabled');
+    }
 };
 
 FideosGame.prototype.keyUp = function (e) {
@@ -60,7 +112,6 @@ FideosGame.prototype.cellClick = function (e) {
     var self = data.context;
 
     if (el.hasClass('gametable-td-cell-empty')) {
-        console.log('click:' + el.attr('id'));
 
 
         $('.gametable-td-cell').removeClass('gametable-td-cell-selected');
@@ -84,8 +135,7 @@ FideosGame.prototype.cellClick = function (e) {
         self.setStatus('user_wait');
 
     } else if ((el.hasClass('gametable-td-cell-filled')) || (el.hasClass('gametable-td-cell-pressed'))) {
-        if (self.status == 'user_filled') {
-            //console.log('select: ' + el.attr('id'));
+        if ((self.status == 'user_filled') || (self.status == 'user_checked')) {
 
 
             self.addCellToWord(el, self);
@@ -120,8 +170,6 @@ FideosGame.prototype.addCellToWord = function (cell, context) {
     letter.y = y;
     letter.val = $('.gametable-cell', cell).html();
 
-    console.log(x);
-    console.log(y);
 
 
     if (wordLength > 0) {
@@ -140,7 +188,8 @@ FideosGame.prototype.addCellToWord = function (cell, context) {
         ) {
             self.word.push(letter);
             cell.addClass('gametable-td-cell-selected');
-            console.log('xxx');
+            self.setStatus('user_checked');
+            //console.log('xxx');
         } else if (
             (lettersInWordCount == 0) &&
             (prevLetter.y == letter.y) &&
@@ -148,21 +197,23 @@ FideosGame.prototype.addCellToWord = function (cell, context) {
         ) {
             self.word.push(letter);
             cell.addClass('gametable-td-cell-selected');
-            console.log('yyy');
+            self.setStatus('user_checked');
+            //console.log('yyy');
         } else if ((prevLetter.y == letter.y) && (prevLetter.x == letter.x)) {
             self.word.pop();
             cell.removeClass('gametable-td-cell-selected');
-            console.log('rem');
+            self.setStatus('user_checked');
+            //console.log('rem');
         }
 
 
     } else {
         self.word.push(letter);
         cell.addClass('gametable-td-cell-selected');
+        self.setStatus('user_checked');
     }
 
 
-    console.log(self.word);
 
 };
 
@@ -176,7 +227,19 @@ FideosGame.prototype.loadTable = function () {
         async: false,
         success: function (data) {
             if (data) {
-                this.table = data;
+                //$(data).each(x,el
+                //this.table = data;
+
+                $.each(data, function (index, value) {
+                    $.each(value, function (x, cell) {
+                        if (cell) {
+                            self.table.addCell(index, x, cell);
+                        } else {
+                            self.table.addCell(index, x, null);
+                        }
+                    });
+                });
+
                 //console.log(data);
 
                 //this.orderList.init(data.data);
@@ -186,20 +249,36 @@ FideosGame.prototype.loadTable = function () {
         //error: handleFailedAjax
     });
 
-    return self;
+    return self.table;
 
 };
 
-FideosGame.prototype.renderTable = function () {
+FideosGame.prototype.renderTable = function (data) {
     var self = this;
-    $.each(this.table, function (index, value) {
+    //$.each(this.table, function (index, value) {
+    //    $.each(value, function (x, cell) {
+    //        if (cell) {
+    //            $('#gametable-cell-' + index + '-' + x + ' > .gametable-cell').html(cell);
+    //            $('#gametable-cell-' + index + '-' + x).addClass('gametable-td-cell-filled');
+    //        } else {
+    //            $('#gametable-cell-' + index + '-' + x).addClass('gametable-td-cell-empty');
+    //        }
+    //    });
+    //});
+
+    if (!data) {
+        data = self.table;
+    }
+
+    $.each(data.table, function (index, value) {
         $.each(value, function (x, cell) {
-            if (cell) {
-                $('#gametable-cell-' + index + '-' + x + ' > .gametable-cell').html(cell);
+            if (cell.letter != null) {
+                $('#gametable-cell-' + index + '-' + x + ' > .gametable-cell').html(cell.letter);
                 $('#gametable-cell-' + index + '-' + x).addClass('gametable-td-cell-filled');
             } else {
                 $('#gametable-cell-' + index + '-' + x).addClass('gametable-td-cell-empty');
             }
+
         });
     });
     return self;

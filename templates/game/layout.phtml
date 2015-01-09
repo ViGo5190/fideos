@@ -33,20 +33,26 @@
 <div class='body-feel'>
 
     <div class="header">
-        <div class="header-container">header</div>
+        <div class="header-container">
+            <div class="header-container-left">Domic</div>
+            <div class="header-container-right"><a href="#" class="header-container-right-reload">заново</a></div>
+        </div>
     </div>
 
     <div class="container">
 
 
         <div class="divgametable">
+            <div class="game-check">
+                <button class="game-check-button" id="game-check-button">проверить слово</button>
+            </div>
             <table class="gametable" id="gametable">
                 <?php  (isset($gameTable)) ? $gameTableOk = $gameTable : $gameTableOk = array(
-                    '1' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
-                    '2' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
-                    '3' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
-                    '4' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
-                    '5' => array('1' => "", '2' => "", '3' => "", '4' => "", '5' => ""),
+                    '0' => array('0' => "",'1' => "", '2' => "", '3' => "", '4' => ""),
+                    '1' => array('0' => "",'1' => "", '2' => "", '3' => "", '4' => ""),
+                    '2' => array('0' => "",'1' => "", '2' => "", '3' => "", '4' => ""),
+                    '3' => array('0' => "",'1' => "", '2' => "", '3' => "", '4' => ""),
+                    '4' => array('0' => "",'1' => "", '2' => "", '3' => "", '4' => ""),
                 ); ?>
 
 

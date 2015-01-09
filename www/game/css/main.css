@@ -1,10 +1,8 @@
 
-
-html{
+html {
     height: 100%;
     margin: 0;
 }
-
 
 body {
     background: #18bc9c;
@@ -14,7 +12,7 @@ body {
     height: 100%;
 }
 
-.body-feel{
+.body-feel {
     min-height: 100%;
 }
 
@@ -22,7 +20,7 @@ body {
     /*background: #18bc9c;*/
     display: block;
 
-    padding-top: 100px;
+    padding-top: 75px;
     height: 100%;
 }
 
@@ -33,22 +31,58 @@ body {
     left: 0;
     z-index: 1030;
 
-    min-height: 60px;
+    min-height: 15px;
     margin-bottom: 21px;
+
+    padding: 25px 0;
 
 }
 
 .header-container {
     margin-right: auto;
     margin-left: auto;
-    padding-left: 15px;
-    padding-right: 15px;
+    padding-left: 150px;
+    padding-right: 150px;
 
     display: block;
 
     color: #fff;
     text-align: center;
 
+}
+
+.header-container-left {
+    display: block;
+    float: left;
+    padding: 10px 15px;
+}
+
+.header-container-right {
+    display: block;
+    float: right;
+}
+
+a {
+    text-decoration: none;
+}
+
+a.header-container-right-reload {
+    color: #ffffff;
+
+    line-height: 21px;
+
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+
+    background: transparent;
+}
+
+a.header-container-right-reload:hover,
+a.header-container-right-reload:focus,
+a.header-container-right-reload:active,
+a.active {
+    color: #18bc9c;
 }
 
 div.divgametable {
@@ -129,14 +163,12 @@ input.gametable {
     display: none;
 }
 
-
 .profiler {
     /*position:relative;*/
     /*bottom:100%;*/
 }
 
-
-hr.white{
+hr.white {
 
     max-width: 250px;
 
@@ -152,9 +184,42 @@ hr.white{
     border-color: rgb(255, 255, 255);
 }
 
-
 .gametable-td-cell-selected {
-    color:red;
+    color: red;
     border-color: red;
+}
+
+button.game-check-button {
+
+    display: inline-block;
+    /*margin-bottom: 0;*/
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    /*border: 1px solid transparent;*/
+    white-space: nowrap;
+    /*padding: 10px 15px;*/
+    /*font-size: 15px;*/
+    /*line-height: 1.42857143;*/
+    /*border-radius: 4px;*/
+    /*-webkit-user-select: none;*/
+    /*-moz-user-select: none;*/
+    /*-ms-user-select: none;*/
+    /*user-select: none;*/
+
+    padding: 10px 15px;
+    font-size: 15px;
+    line-height: 1.33;
+    border-radius: 4px;
+
+    color: #ffffff;
+    /*background-color: #18bc9c;*/
+    background-color: #233140;
+    border-color: #233140;
+
+    margin: 10px;
+
 }
 
