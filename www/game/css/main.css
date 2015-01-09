@@ -1,0 +1,225 @@
+
+html {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    background: #18bc9c;
+    /*background: #2c3e50;*/
+    margin: 0;
+    overflow-x: hidden;
+    height: 100%;
+}
+
+.body-feel {
+    min-height: 100%;
+}
+
+.container {
+    /*background: #18bc9c;*/
+    display: block;
+
+    padding-top: 75px;
+    height: 100%;
+}
+
+.header {
+    background: #2c3e50;
+    position: fixed;
+    right: 0;
+    left: 0;
+    z-index: 1030;
+
+    min-height: 15px;
+    margin-bottom: 21px;
+
+    padding: 25px 0;
+
+}
+
+.header-container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 50px;
+    padding-right: 50px;
+
+    display: block;
+
+    color: #fff;
+    text-align: center;
+
+}
+
+.header-container-left {
+    display: block;
+    float: left;
+    padding: 10px 15px;
+}
+
+.header-container-right {
+    display: block;
+    float: right;
+}
+
+a {
+    text-decoration: none;
+}
+
+a.header-container-right-reload {
+    color: #ffffff;
+
+    line-height: 21px;
+
+    position: relative;
+    display: block;
+    padding: 10px 15px;
+
+    background: transparent;
+}
+
+a.header-container-right-reload:hover,
+a.header-container-right-reload:focus,
+a.header-container-right-reload:active,
+a.active {
+    color: #18bc9c;
+}
+
+div.divgametable {
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
+table.gametable {
+    display: table;
+    border-collapse: collapse;
+    margin: 0 auto;
+    color: #fff;
+}
+
+table.gametable tr {
+    /*display: block;*/
+}
+
+table.gametable tr td {
+    width: 45px;
+    height: 45px;
+    min-height: 45px;
+    min-width: 45px;
+    /*display: block;*/
+    border: 1px solid black;
+    /*float: left;*/
+
+    text-align: center;
+    vertical-align: middle;
+
+    font-size: 1.9em;
+
+}
+
+.footer {
+    background: #233140;
+    display: block;
+    padding-top: 25px;
+    padding-right: 0px;
+    padding-bottom: 25px;
+    padding-left: 0px;
+
+    color: #fff;
+    text-align: center;
+}
+
+input.gametable {
+    background: #18bc9c;
+    /*width: 100%;*/
+    /*padding: 10px;*/
+    margin: 0px;
+    /*border: 0px solid;*/
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    border: none;
+    text-align: center;
+    font-size: 1em;
+}
+
+.gametable-input {
+}
+
+.gametable-cell {
+
+}
+
+.gametable-cell-filled {
+
+}
+
+.hidden {
+    display: none;
+}
+
+.profiler {
+    /*position:relative;*/
+    /*bottom:100%;*/
+}
+
+hr.white {
+
+    max-width: 250px;
+
+    border-top-style: solid;
+
+    text-align: center;
+
+    margin: 25px auto 30px;
+    padding: 0;
+    border: 0;
+    border-top: solid 5px;
+
+    border-color: rgb(255, 255, 255);
+}
+
+.gametable-td-cell-selected {
+    color: red;
+    border-color: red;
+}
+
+button.game-check-button {
+
+    display: inline-block;
+    /*margin-bottom: 0;*/
+    font-weight: normal;
+    text-align: center;
+    vertical-align: middle;
+    cursor: pointer;
+    background-image: none;
+    /*border: 1px solid transparent;*/
+    white-space: nowrap;
+    /*padding: 10px 15px;*/
+    /*font-size: 15px;*/
+    /*line-height: 1.42857143;*/
+    /*border-radius: 4px;*/
+    /*-webkit-user-select: none;*/
+    /*-moz-user-select: none;*/
+    /*-ms-user-select: none;*/
+    /*user-select: none;*/
+
+    padding: 10px 15px;
+    font-size: 15px;
+    line-height: 1.33;
+    border-radius: 4px;
+
+    color: #ffffff;
+    /*background-color: #18bc9c;*/
+    background-color: #233140;
+    border-color: #233140;
+
+    margin: 10px;
+
+}
+

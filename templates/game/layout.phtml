@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Fideos game">
+    <meta name="author" content="Stan Gumeniuk">
+
+    <title>Fideos</title>
+
+    <!-- Bootstrap Core CSS -->
+    <!--    <link href="/game/css/bootstrap.min.css" rel="stylesheet">-->
+
+    <!-- Custom CSS -->
+    <link href="/game/css/main.css?<?php rand(0, 10000); ?>" rel="stylesheet">
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+    <script src="/js/jquery.js"></script>
+    <script type="text/javascript">
+        var fideostoken = '<?=framework_auth_getUserToken();?>';
+    </script>
+
+</head>
+
+<body>
+<div class='body-feel'>
+
+    <div class="header">
+        <div class="header-container">
+            <div class="header-container-left">Domic</div>
+            <div class="header-container-right"><a href="#" class="header-container-right-reload"
+                                                   id="header-container-right-reload">заново</a></div>
+        </div>
+    </div>
+
+    <div class="container">
+
+
+        <div class="divgametable">
+            <div class="game-check">
+                <button class="game-check-button" id="game-check-button">проверить слово</button>
+            </div>
+            <table class="gametable" id="gametable">
+                <?php  (isset($gameTable)) ? $gameTableOk = $gameTable : $gameTableOk = array(
+                    '0' => array('0' => "", '1' => "", '2' => "", '3' => "", '4' => ""),
+                    '1' => array('0' => "", '1' => "", '2' => "", '3' => "", '4' => ""),
+                    '2' => array('0' => "", '1' => "", '2' => "", '3' => "", '4' => ""),
+                    '3' => array('0' => "", '1' => "", '2' => "", '3' => "", '4' => ""),
+                    '4' => array('0' => "", '1' => "", '2' => "", '3' => "", '4' => ""),
+                ); ?>
+
+
+                <tbody>
+                <?php foreach ($gameTableOk as $rowNumber => $row): ?>
+                    <tr>
+                        <?php foreach ($row as $cellNumber => $cell): ?>
+                            <td id="gametable-cell-<?= $rowNumber; ?>-<?= $cellNumber; ?>" class="gametable-td-cell">
+
+                                <div class="gametable-input hidden">
+                                    <input type="text" maxlength="1" class="gametable" value="<?= $cell; ?>">
+                                </div>
+                                <div class="gametable-cell">
+                                    <?= $cell; ?>
+                                </div>
+                            </td>
+                        <?php endforeach; ?>
+
+
+                    </tr>
+                <?php endforeach; ?>
+
+
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            <div class="footer">
+                <p>Copyright &copy; Stan Gumeniuk 2015</p>
+            </div>
+        </footer>
+
+
+    </div>
+
+
+</div>
+<?php if (defined('FIDEOS_PROFILER_ENABLED') && FIDEOS_PROFILER_ENABLED) : ?>
+    <div class="profiler">
+        <hr class="white">
+        <?= framework_profiler_getProfileDataHtml(); ?>
+    </div>
+
+<?php endif; ?>
+
+
+<!--<div class="profiler"></div>-->
+
+<script src="/game/js/main.js?<?php rand(0, 10000); ?>"></script>
+<!-- Yandex.Metrika counter -->
+<script type="text/javascript">
+    (function (d, w, c) {
+        (w[c] = w[c] || []).push(function () {
+            try {
+                w.yaCounter24592760 = new Ya.Metrika({
+                    id: 24592760,
+                    webvisor: true,
+                    clickmap: true,
+                    trackLinks: true,
+                    accurateTrackBounce: true,
+                    trackHash: true
+                });
+            } catch (e) {
+            }
+        });
+
+        var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () {
+                n.parentNode.insertBefore(s, n);
+            };
+        s.type = "text/javascript";
+        s.async = true;
+        s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+        if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f, false);
+        } else {
+            f();
+        }
+    })(document, window, "yandex_metrika_callbacks");
+</script>
+<noscript>
+    <div><img src="//mc.yandex.ru/watch/24592760" style="position:absolute; left:-9999px;" alt=""/></div>
+</noscript>
+<!-- /Yandex.Metrika counter -->
+
+</body>
+</html>
+
+
