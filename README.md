@@ -6,7 +6,7 @@ fideos
 
 version
 =======
-v0.1.1
+v0.2.0
 
 **Current Build Status**
 
