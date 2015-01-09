@@ -25,7 +25,9 @@
     <![endif]-->
 
     <script src="/js/jquery.js"></script>
-    <script src="/game/js/main.js?<?php rand(0, 10000); ?>"></script>
+    <script type="text/javascript">
+        var fideostoken = '<?=framework_auth_getUserToken();?>';
+    </script>
 
 </head>
 
@@ -35,7 +37,8 @@
     <div class="header">
         <div class="header-container">
             <div class="header-container-left">Domic</div>
-            <div class="header-container-right"><a href="#" class="header-container-right-reload">заново</a></div>
+            <div class="header-container-right"><a href="#" class="header-container-right-reload"
+                                                   id="header-container-right-reload">заново</a></div>
         </div>
     </div>
 
@@ -48,11 +51,11 @@
             </div>
             <table class="gametable" id="gametable">
                 <?php  (isset($gameTable)) ? $gameTableOk = $gameTable : $gameTableOk = array(
-                    '0' => array('0' => "",'1' => "", '2' => "", '3' => "", '4' => ""),
-                    '1' => array('0' => "",'1' => "", '2' => "", '3' => "", '4' => ""),
-                    '2' => array('0' => "",'1' => "", '2' => "", '3' => "", '4' => ""),
-                    '3' => array('0' => "",'1' => "", '2' => "", '3' => "", '4' => ""),
-                    '4' => array('0' => "",'1' => "", '2' => "", '3' => "", '4' => ""),
+                    '0' => array('0' => "", '1' => "", '2' => "", '3' => "", '4' => ""),
+                    '1' => array('0' => "", '1' => "", '2' => "", '3' => "", '4' => ""),
+                    '2' => array('0' => "", '1' => "", '2' => "", '3' => "", '4' => ""),
+                    '3' => array('0' => "", '1' => "", '2' => "", '3' => "", '4' => ""),
+                    '4' => array('0' => "", '1' => "", '2' => "", '3' => "", '4' => ""),
                 ); ?>
 
 
@@ -102,7 +105,7 @@
 
 <!--<div class="profiler"></div>-->
 
-
+<script src="/game/js/main.js?<?php rand(0, 10000); ?>"></script>
 <!-- Yandex.Metrika counter -->
 <script type="text/javascript">
     (function (d, w, c) {

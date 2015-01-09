@@ -17,6 +17,8 @@ require_once '../src/loader.php';
 
 framework_session_startSession();
 
+framework_auth_auth();
+
 framework_router_run();
 
 framework_response_send();

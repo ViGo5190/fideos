@@ -15,7 +15,7 @@ FideosTable.prototype.init = function () {
 FideosTable.prototype.addCell = function (x, y, letter) {
     var self = this;
 
-    self.table[x - 1][y - 1] = {letter: letter};
+    self.table[x][y] = {letter: letter};
 };
 
 function FideosGame() {
@@ -24,6 +24,7 @@ function FideosGame() {
     this.table = new FideosTable();
     this.status = 'user_empty'; //user_empty, user_wait, user_filled, user_checked, user_send, user_ok
     this.word = [];
+
 }
 
 FideosGame.prototype.init = function () {
@@ -52,13 +53,79 @@ FideosGame.prototype.makeButtonListen = function () {
 
     $('#game-check-button').bind('click', {context: self}, self.checkButtonClick);
 
+    $('#header-container-right-reload').bind('click', {context: self}, self.reloadButtonClick);
+
+
     return self;
 };
 
+FideosGame.prototype.reloadButtonClick = function (e) {
+    var self = e.data.context;
+    $.ajax({
+        dataType: "json",
+        type: 'POST',
+        url: '/game/api/user/clear/',
+        context: this,
+        async: false,
+        headers: {
+            'X-Csrf-Token': fideostoken
+        },
+        success: function (data) {
+            if (data.data) {
+                $.each(data.data, function (index, value) {
+                    $.each(value, function (x, cell) {
+                        if (cell.letter) {
+                            self.table.addCell(index, x, cell.letter);
+                        } else {
+                            self.table.addCell(index, x, null);
+                        }
+                    });
+                });
+            }
+            self.renderTable(self.table);
+
+
+        }
+    });
+};
 
 FideosGame.prototype.checkButtonClick = function (e) {
     var self = e.data.context;
-    alert('fff');
+
+    word = self.word;
+    table = self.table.table;
+
+
+    $.ajax({
+        dataType: "json",
+        type: 'POST',
+        url: '/game/api/user/check/word/',
+        data: {word: word, table: table},
+        context: this,
+        async: false,
+        headers: {
+            'X-Csrf-Token': fideostoken
+        },
+        success: function (data) {
+            if (data.data) {
+                $.each(data.data, function (index, value) {
+                    $.each(value, function (x, cell) {
+                        if (cell.letter) {
+                            self.table.addCell(index, x, cell.letter);
+                        } else {
+                            self.table.addCell(index, x, null);
+                        }
+                    });
+                });
+            }
+            self.renderTable(self.table);
+
+
+        }
+        //error: handleFailedAjax
+    });
+
+
 };
 
 FideosGame.prototype.setStatus = function (status) {
@@ -66,6 +133,19 @@ FideosGame.prototype.setStatus = function (status) {
     self.status = status;
 
     self.updateButtonStatus(self.status);
+};
+
+FideosGame.prototype.isAddedLetterInWord = function () {
+    var self = this;
+    self.isaliw = false;
+    $.each(self.word, function (index, letter) {
+        if (letter.status == 'pressed') {
+            self.isaliw = true;
+        }
+    });
+
+    return self.isaliw;
+
 };
 
 FideosGame.prototype.updateButtonStatus = function () {
@@ -82,8 +162,15 @@ FideosGame.prototype.updateButtonStatus = function () {
         $('#game-check-button').html('Выделите слово');
         $('#game-check-button').attr('disabled', 'disabled');
     } else if (status == 'user_checked') {
-        $('#game-check-button').html('Отправить слово');
-        $('#game-check-button').removeAttr('disabled');
+        //console.log('is'+self.isAddedLetterInWord());
+        //if (self.isAddedLetterInWord())
+        if ((self.word.length >= 3) && (self.isAddedLetterInWord())) {
+            $('#game-check-button').html('Отправить слово');
+            $('#game-check-button').removeAttr('disabled');
+        } else {
+            $('#game-check-button').html('Выделите слово');
+            $('#game-check-button').attr('disabled', 'disabled');
+        }
     }
 };
 
@@ -169,7 +256,11 @@ FideosGame.prototype.addCellToWord = function (cell, context) {
     letter.x = x;
     letter.y = y;
     letter.val = $('.gametable-cell', cell).html();
-
+    if ($(cell).hasClass('gametable-td-cell-filled')) {
+        letter.status = 'filled';
+    } else if ($(cell).hasClass('gametable-td-cell-pressed')) {
+        letter.status = 'pressed';
+    }
 
 
     if (wordLength > 0) {
@@ -214,7 +305,6 @@ FideosGame.prototype.addCellToWord = function (cell, context) {
     }
 
 
-
 };
 
 FideosGame.prototype.loadTable = function () {
@@ -225,28 +315,23 @@ FideosGame.prototype.loadTable = function () {
         //data: {action: 'loadOrders'},
         context: this,
         async: false,
+        headers: {
+            'X-Csrf-Token': fideostoken
+        },
         success: function (data) {
-            if (data) {
-                //$(data).each(x,el
-                //this.table = data;
-
-                $.each(data, function (index, value) {
+            if (data.data) {
+                $.each(data.data, function (index, value) {
                     $.each(value, function (x, cell) {
-                        if (cell) {
-                            self.table.addCell(index, x, cell);
+                        if (cell.letter) {
+                            self.table.addCell(index, x, cell.letter);
                         } else {
                             self.table.addCell(index, x, null);
                         }
                     });
                 });
-
-                //console.log(data);
-
-                //this.orderList.init(data.data);
-                //self.renderOrders();
             }
         }
-        //error: handleFailedAjax
+        //error: handleFailedajax
     });
 
     return self.table;
@@ -272,11 +357,17 @@ FideosGame.prototype.renderTable = function (data) {
 
     $.each(data.table, function (index, value) {
         $.each(value, function (x, cell) {
+            $('#gametable-cell-' + index + '-' + x).removeClass('gametable-td-cell-filled');
+            $('#gametable-cell-' + index + '-' + x).removeClass('gametable-td-cell-empty');
+            $('#gametable-cell-' + index + '-' + x).removeClass('gametable-td-cell-wait');
+            $('#gametable-cell-' + index + '-' + x).removeClass('gametable-td-cell-pressed');
+            $('#gametable-cell-' + index + '-' + x).removeClass('gametable-td-cell-selected');
             if (cell.letter != null) {
                 $('#gametable-cell-' + index + '-' + x + ' > .gametable-cell').html(cell.letter);
                 $('#gametable-cell-' + index + '-' + x).addClass('gametable-td-cell-filled');
             } else {
                 $('#gametable-cell-' + index + '-' + x).addClass('gametable-td-cell-empty');
+                $('#gametable-cell-' + index + '-' + x + ' > .gametable-cell').html('');
             }
 
         });
