@@ -15,5 +15,6 @@ require_once __DIR__ . '/framework/session.php';
 require_once __DIR__ . '/framework/template.php';
 require_once __DIR__ . '/framework/response.php';
 require_once __DIR__ . '/framework/auth.php';
+require_once __DIR__ . '/framework/memcache.php';
 
 require_once __DIR__ . '/game/game.php';
