@@ -45,6 +45,13 @@ function framework_profiler_getProfileData()
     return $profilerData;
 }
 
+function framework_profiler_getProfileDataByKey($key)
+{
+
+    $profilerData = $_ENV[FIDEOS_PROFILER_ENV_PREFIX][$key];
+    return $profilerData;
+}
+
 function framework_profiler_getProfileDataHtml()
 {
     $r = '<pre>';
