@@ -3,6 +3,8 @@
  * @author Stan Gumeniuk i@vigo.su
  */
 
+const FIDEOS_MC_PREFIX = "fideos|";
+
 function framework_memcache_getConnection()
 {
     framework_profiler_startProfileEvent(__FUNCTION__);
@@ -44,7 +46,7 @@ function framework_memcache_getConnection()
     return $mc;
 }
 
-function framework_memcache_set($key, $value)
+function framework_memcache_set($key, $value,$time=0)
 {
     framework_profiler_startProfileEvent(__FUNCTION__ . '|' . $key);
     $mc = framework_memcache_getConnection();
@@ -52,7 +54,12 @@ function framework_memcache_set($key, $value)
         framework_profiler_stopProfileEvent(__FUNCTION__ . '|' . $key);
         return false;
     }
-    $res = memcache_set($mc, $key, $value, 0, 30);
+    $res = memcache_set(
+        $mc,
+        framework_memcache_getKeyWithPrefix($key),
+        $value,
+        0,
+        $time);
     framework_profiler_stopProfileEvent(__FUNCTION__ . '|' . $key);
     return $res;
 }
@@ -65,7 +72,16 @@ function framework_memcache_get($key)
         framework_profiler_stopProfileEvent(__FUNCTION__ . '|' . $key);
         return false;
     }
-    $res = memcache_get($mc, $key);
+    $res = memcache_get(
+        $mc,
+        framework_memcache_getKeyWithPrefix($key)
+    );
     framework_profiler_stopProfileEvent(__FUNCTION__ . '|' . $key);
     return $res;
+}
+
+function framework_memcache_getKeyWithPrefix($key)
+{
+//    echo '>>>' . FIDEOS_MC_PREFIX . $key . '<<<';
+    return FIDEOS_MC_PREFIX . $key;
 }
