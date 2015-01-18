@@ -80,8 +80,33 @@ function game_game_checkUserWord($word)
 
     //check word!
 
+//    var_dump($word);die();
+
+
+    $wordStr =game_game_wordArrayToStr($word);
+    if (!$wordStr){
+  //
+    }
+
+    $status = game_word_checkWordUser($wordStr);
+    if (!$status){
+        framework_profiler_stopProfileEvent('game_game_checkUserWord');
+        return FIDEOS_GAME_USER_WORD_STATUS_NOT_FOUND;
+    }
+
+    game_game_addLetterToTableFromWord($word,game_game_getUserTable());
+
     framework_profiler_stopProfileEvent('game_game_checkUserWord');
     return FIDEOS_GAME_USER_WORD_STATUS_OK;
+}
+
+
+function game_game_wordArrayToStr($word){
+    $s = '';
+    foreach ($word as $letter){
+        $s .= $letter['val'];
+    }
+    return $s;
 }
 
 function game_game_addLetterToTableFromWord($word, $table)
