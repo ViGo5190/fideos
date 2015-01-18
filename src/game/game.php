@@ -10,6 +10,11 @@ const FIDEOS_GAME_FIND_WORDS = 'fideos_game_find_words';
 const FIDEOS_GAME_USER_WORDS = 'fideos_game_user_words';
 const FIDEOS_GAME_COMP_WORDS = 'fideos_game_comp_words';
 
+const FIDEOS_GAME_STATUS_EXEC_KEY = 'fideos_game_status_exec';
+const FIDEOS_GAME_STATUS_EXEC_USER = 1;
+const FIDEOS_GAME_STATUS_EXEC_PC = 2;
+const FIDEOS_GAME_STATUS_EXEC_END = 3;
+
 const FIDEOS_GAME_USER_WORD_STATUS_OK = '1';
 const FIDEOS_GAME_USER_WORD_STATUS_TO_SHORT = '2';
 const FIDEOS_GAME_USER_WORD_STATUS_NOT_FOUND = '3';
@@ -64,6 +69,24 @@ function game_game_setUserWords($words)
 function game_game_clearUserWords()
 {
     framework_session_setData(FIDEOS_GAME_USER_WORDS, []);
+}
+
+function game_game_getStatusExec()
+{
+    if (!isset(framework_session_getAll()[FIDEOS_GAME_STATUS_EXEC_KEY])) {
+        framework_session_setData(FIDEOS_GAME_STATUS_EXEC_KEY, FIDEOS_GAME_STATUS_EXEC_USER);
+    }
+    return framework_session_getAll()[FIDEOS_GAME_STATUS_EXEC_KEY];
+}
+
+function game_game_setStatusExec($status)
+{
+    framework_session_setData(FIDEOS_GAME_STATUS_EXEC_KEY, $status);
+}
+
+function game_game_clearStatusExec()
+{
+    framework_session_setData(FIDEOS_GAME_STATUS_EXEC_KEY, FIDEOS_GAME_STATUS_EXEC_USER);
 }
 
 
@@ -197,9 +220,10 @@ function game_game_compExec()
 
         game_game_addWordToWordsList($bestWrd['wrd']);
 
-
+        game_game_setStatusExec(FIDEOS_GAME_STATUS_EXEC_USER);
         return $bestWrd['wrd'];
     }
+    game_game_setStatusExec(FIDEOS_GAME_STATUS_EXEC_END);
     return false;
 }
 
@@ -285,6 +309,7 @@ function game_game_addLetterToTableFromWord($x, $y, $letter)
 
 function game_game_restart()
 {
+    game_game_clearStatusExec();
     game_game_clearUserWords();
     game_game_clearCompWords();
     game_game_clearUsedWords(FIDEOS_GAME_USED_WORDS, []);

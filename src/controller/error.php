@@ -11,6 +11,7 @@ function controller_error_404()
         'container' => '404: Not found!'
     ));
     echo $c;
+    die();
 }
 
 function controller_error_401()
@@ -21,14 +22,16 @@ function controller_error_401()
         'container' => '401'
     ));
     echo $c;
+    die();
 }
 
-function controller_error_500()
+function controller_error_500($text = "")
 {
     header('HTTP/1.0 500 ');
 
     $c = framework_template_compileTemplate('layout', array(
-        'container' => '500'
+        'container' => '500 '. $text,
     ));
     echo $c;
+    die();
 }
