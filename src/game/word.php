@@ -364,11 +364,12 @@ function game_word_checkTree($table, $x, $y, $n, &$words, $startx, $starty, $let
     if ($n['wrd'] != false) {
         if (mb_strlen($n['wrd']) >= 0) {
             if (!isset($words[$n['wrd']])) {
-//                if ($n['wrd']=="клад"){
+//                if ($n['wrd']=="баклажан"){
 //                    echo "------------!<pre>";
 //var_dump($n);
 //var_dump($x);
 //var_dump($y);
+//var_dump($table);
 //                    echo "</pre>";
 //                    die();
 //                }

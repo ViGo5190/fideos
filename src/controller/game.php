@@ -54,19 +54,18 @@ function controller_game_api_user_check_word()
 
     $correct = false;
     if (game_game_checkUserWord($word) == FIDEOS_GAME_USER_WORD_STATUS_OK) {
-        $table = game_game_addLetterToTableFromWord($word, $table);
+        $table = game_game_addLetterFromUserWordToTableFromWord($word, $table);
         game_game_addWordToWordsList($word);
         $correct = true;
     }
 
     framework_response_helper_createJsonResponse(
         [
-            'table' => $table,
+            'table'   => $table,
             'correct' => $correct,
         ]
     );
 }
-
 
 function controller_game_api_comp_exec()
 {
@@ -75,13 +74,12 @@ function controller_game_api_comp_exec()
 //        controller_error_401();
 //    }
 
-    $correct = false;
-
-    game_game_compExec();
-
+    $correct = game_game_compExec();
+    $table = game_game_getUserTable();
     framework_response_helper_createJsonResponse(
         [
             'correct' => $correct,
+            'table'   => $table,
         ]
     );
 }

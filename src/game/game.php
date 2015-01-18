@@ -113,10 +113,10 @@ function game_game_compExec()
 
     for ($x = 0; $x < 5; $x++) {
         for ($y = 0; $y < 5; $y++) {
-            $f = game_game_isNearestCellFilled($x, $y);
+//            $f = game_game_isNearestCellFilled($x, $y);
 //            echo ($f ? "1" : "0") . "|";
 
-            if ($f) {
+            if ((game_game_isNearestCellFilled($x, $y)) && ($table[$x][$y]['letter'] == "")) {
 
 //                game_word_checkRevertPostFix($x, $y, "",$words);
 
@@ -124,7 +124,7 @@ function game_game_compExec()
                 $mckey = TREE_REVERT_POSTFIX_KEY;
                 $words = [];
                 foreach (game_word_getAlphabet() as $letter) {
-                    $table[$x][$y]['var'] = $letter;
+                    $table[$x][$y]['letter'] = $letter;
                     $table[$x][$y]['used'] = 0;
                     $mckey = TREE_REVERT_POSTFIX_KEY;
                     $n = framework_memcache_get($mckey . $letter);
@@ -135,10 +135,10 @@ function game_game_compExec()
         }
 //        echo "<br>" . PHP_EOL;
     }
-    echo "<pre>";
+//    echo "<pre>";
     $words = game_game_getFindWords();
 //    var_dump($words);
-    echo "</pre>";
+//    echo "</pre>";
 
     $maxLength = 0;
     $bestWrd = null;
@@ -148,11 +148,17 @@ function game_game_compExec()
             $maxLength = mb_strlen($word['wrd']);
         }
     }
-    var_dump($bestWrd);
-    var_dump(game_game_getUsedWords());
+//    var_dump($bestWrd);
+//    var_dump(game_game_getUsedWords());
     game_game_clearFindWords();
     framework_profiler_stopProfileEvent('compExec');
-    die();
+//    die();
+
+    if ($bestWrd) {
+        game_game_addLetterToTableFromWord($bestWrd['x'], $bestWrd['y'], $bestWrd['letter']);
+        return true;
+    }
+    return false;
 }
 
 /**
@@ -188,7 +194,7 @@ function game_game_checkUserWord($word)
         return FIDEOS_GAME_USER_WORD_STATUS_NOT_FOUND;
     }
 
-    game_game_addLetterToTableFromWord($word, game_game_getUserTable());
+    game_game_addLetterFromUserWordToTableFromWord($word, game_game_getUserTable());
 
     framework_profiler_stopProfileEvent('game_game_checkUserWord');
     return FIDEOS_GAME_USER_WORD_STATUS_OK;
@@ -203,7 +209,7 @@ function game_game_wordArrayToStr($word)
     return $s;
 }
 
-function game_game_addLetterToTableFromWord($word, $table)
+function game_game_addLetterFromUserWordToTableFromWord($word, $table)
 {
     $letterAdded = null;
     foreach ($word as $k => $letter) {
@@ -216,7 +222,16 @@ function game_game_addLetterToTableFromWord($word, $table)
         $table[$letterAdded['x']][$letterAdded['y']]['letter'] = $letterAdded['val'];
     }
 
-    framework_session_setData(FIDEOS_GAME_USER_TABLE, $table);
+    game_game_setUserTable($table);
+    return $table;
+}
+
+function game_game_addLetterToTableFromWord($x, $y, $letter)
+{
+    $table = game_game_getUserTable();
+    $table[$x][$y]['letter'] = $letter;
+
+    game_game_setUserTable($table);
 
     return $table;
 }
