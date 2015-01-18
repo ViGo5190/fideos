@@ -83,7 +83,8 @@ FideosGame.prototype.reloadButtonClick = function (e) {
                 });
             }
             self.renderTable(self.table);
-
+            $('#userwords').empty();
+            $('#compwords').empty();
 
         }
     });
@@ -120,6 +121,7 @@ FideosGame.prototype.checkButtonClick = function (e) {
             }
             if (data.data.correct){
                 self.setStatus('user_ok');
+                self.addUserWord(data.data.word);
             } else {
                 self.setStatus('user_empty');
             }
@@ -214,6 +216,7 @@ FideosGame.prototype.getComputerExec = function() {
             }
             if (data.data.correct){
                 self.setStatus('user_empty');
+                self.addCompWord(data.data.word);
             } else{
                 self.setStatus('finished');
             }
@@ -224,6 +227,18 @@ FideosGame.prototype.getComputerExec = function() {
         }
         //error: handleFailedAjax
     });
+};
+
+FideosGame.prototype.addCompWord = function(word) {
+    var div = $('<div style="display:block;"></div>');
+    div.append(word);
+    $('#compwords'). prepend(div);
+};
+
+FideosGame.prototype.addUserWord = function(word) {
+    var div = $('<div style="display:block;"></div>');
+    div.append(word);
+    $('#userwords').prepend(div);
 };
 
 FideosGame.prototype.keyUp = function (e) {

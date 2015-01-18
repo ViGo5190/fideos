@@ -83,6 +83,33 @@
             </table>
         </div>
 
+        <div class="divresult">
+            <table class="resulttable">
+                <tbody>
+                <tr>
+                    <th>Игрок</th>
+                    <th>Компьютер</th>
+                </tr>
+                <tr>
+                    <td id="userwords">
+                        <?php foreach ($userwords as  $word): ?>
+                            <div style="display:block;">
+                            <?= $word;?>
+                            </div>
+                        <?php endforeach; ?>
+                    </td>
+                    <td id="compwords">
+                        <?php foreach ($compwords as  $word): ?>
+                            <div style="display:block;">
+                                <?= $word;?>
+                            </div>
+                        <?php endforeach; ?>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
         <footer>
             <div class="footer">
                 <p>Copyright &copy; Stan Gumeniuk 2015</p>
