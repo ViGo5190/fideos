@@ -241,12 +241,10 @@ FideosGame.prototype.addCellToWord = function (cell, context) {
 
     var wordLength = self.word.length;
 
-
     var id = cell.attr('id');
 
-
-    re = /gametable-cell-(\d)-(\d)/i;
-    found = id.match(re);
+    var re = /gametable-cell-(\d)-(\d)/i;
+    var found = id.match(re);
     var x = parseInt(found[1], 10); //row
     var y = parseInt(found[2], 10); //cell
 
