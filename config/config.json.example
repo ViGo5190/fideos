@@ -1,0 +1,13 @@
+{
+    "app": {
+        "name": "Fideos",
+        "domain": "example.com",
+        "secure": false
+    },
+    "mc" : {
+        "dict" :{
+            "host" : "localhost",
+            "port" : 11211
+        }
+    }
+}

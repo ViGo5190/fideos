@@ -10,6 +10,8 @@
  */
 function framework_template_compileTemplate($templateName, $variables = [])
 {
+    framework_profiler_startProfileEvent(__FUNCTION__);
+
     framework_profiler_startProfileEvent('framework_template_compileTemplate_checkExist' . '|' . $templateName);
     $tplFile = __DIR__ . '/../../templates/' . $templateName . '.phtml';
     if (!file_exists($tplFile)) {
@@ -25,5 +27,6 @@ function framework_template_compileTemplate($templateName, $variables = [])
     $compiledTemplate = ob_get_contents();
     ob_end_clean();
 
+    framework_profiler_stopProfileEvent(__FUNCTION__);
     return $compiledTemplate;
 }
