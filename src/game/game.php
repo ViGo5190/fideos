@@ -4,11 +4,14 @@
  */
 
 const FIDEOS_GAME_USER_TABLE = 'fideos_game_user_table';
+const FIDEOS_GAME_USED_WORDS = 'fideos_game_used_words';
 
 const FIDEOS_GAME_USER_WORD_STATUS_OK = '1';
 const FIDEOS_GAME_USER_WORD_STATUS_TO_SHORT = '2';
 const FIDEOS_GAME_USER_WORD_STATUS_NOT_FOUND = '3';
 const FIDEOS_GAME_USER_WORD_STATUS_NO_ADDED_LETTER = '4';
+const FIDEOS_GAME_USER_WORD_STATUS_USED = '5';
+
 
 function game_game_getUserTable()
 {
@@ -18,19 +21,27 @@ function game_game_getUserTable()
     return framework_session_getAll()[FIDEOS_GAME_USER_TABLE];
 }
 
+function game_game_getUsedWords()
+{
+    if (!isset(framework_session_getAll()[FIDEOS_GAME_USED_WORDS])) {
+        framework_session_setData(FIDEOS_GAME_USED_WORDS, []);
+    }
+    return framework_session_getAll()[FIDEOS_GAME_USED_WORDS];
+}
+
 function game_game_genTable()
 {
     framework_profiler_startProfileEvent('game_gen_table');
     $array = array(
         '0' => array(
-            '0' => array('letter' => "1"),
+            '0' => array('letter' => ""),
             '1' => array('letter' => ""),
             '2' => array('letter' => ""),
             '3' => array('letter' => ""),
             '4' => array('letter' => "")
         ),
         '1' => array(
-            '0' => array('letter' => "1"),
+            '0' => array('letter' => ""),
             '1' => array('letter' => ""),
             '2' => array('letter' => ""),
             '3' => array('letter' => ""),
@@ -44,14 +55,14 @@ function game_game_genTable()
             '4' => array('letter' => "о")
         ),
         '3' => array(
-            '0' => array('letter' => "1"),
+            '0' => array('letter' => ""),
             '1' => array('letter' => ""),
             '2' => array('letter' => ""),
             '3' => array('letter' => ""),
             '4' => array('letter' => "")
         ),
         '4' => array(
-            '0' => array('letter' => "1"),
+            '0' => array('letter' => ""),
             '1' => array('letter' => ""),
             '2' => array('letter' => ""),
             '3' => array('letter' => ""),
@@ -86,6 +97,11 @@ function game_game_checkUserWord($word)
     $wordStr =game_game_wordArrayToStr($word);
     if (!$wordStr){
   //
+    }
+
+    if (game_game_checkWordInWordsList($wordStr)){
+        framework_profiler_stopProfileEvent('game_game_checkUserWord');
+        return FIDEOS_GAME_USER_WORD_STATUS_USED;
     }
 
     $status = game_word_checkWordUser($wordStr);
@@ -130,5 +146,26 @@ function game_game_addLetterToTableFromWord($word, $table)
 function game_game_restart()
 {
     framework_session_setData(FIDEOS_GAME_USER_TABLE, game_game_genTable());
+    framework_session_setData(FIDEOS_GAME_USED_WORDS, []);
 }
+
+function game_game_addWordToWordsList($word)
+{
+    $word = game_game_wordArrayToStr($word);
+    $words = game_game_getUsedWords();
+
+    $words[] = $word;
+    framework_session_setData(FIDEOS_GAME_USED_WORDS, $words);
+
+}
+
+function game_game_checkWordInWordsList($word){
+    $words = game_game_getUsedWords();
+    if (in_array($word, $words)){
+        return true;
+    }
+    return false;
+}
+
+
 

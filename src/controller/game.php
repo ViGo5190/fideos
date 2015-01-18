@@ -52,11 +52,46 @@ function controller_game_api_user_check_word()
     $word = $requestPostData['word'];
     $table = $requestPostData['table'];
 
+    $correct = false;
     if (game_game_checkUserWord($word) == FIDEOS_GAME_USER_WORD_STATUS_OK) {
         $table = game_game_addLetterToTableFromWord($word, $table);
+        game_game_addWordToWordsList($word);
+        $correct = true;
     }
 
-    framework_response_helper_createJsonResponse($table);
+    framework_response_helper_createJsonResponse(
+        [
+            'table' => $table,
+            'correct' => $correct,
+        ]
+    );
+}
+
+
+function controller_game_api_comp_exec()
+{
+
+    if (!framework_auth_checkPostRequestWithToken()) {
+        controller_error_401();
+    }
+
+    $requestPostData = framework_request_getPOSTData();
+
+    if (!isset($requestPostData['table'])) {
+        controller_error_500();
+    }
+    $table = $requestPostData['table'];
+
+    $correct = false;
+
+    // TODO: exec
+
+    framework_response_helper_createJsonResponse(
+        [
+            'table' => $table,
+            'correct' => $correct,
+        ]
+    );
 }
 
 function controller_game_api_user_clear()
