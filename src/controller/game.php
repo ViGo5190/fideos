@@ -71,24 +71,16 @@ function controller_game_api_user_check_word()
 function controller_game_api_comp_exec()
 {
 
-    if (!framework_auth_checkPostRequestWithToken()) {
-        controller_error_401();
-    }
-
-    $requestPostData = framework_request_getPOSTData();
-
-    if (!isset($requestPostData['table'])) {
-        controller_error_500();
-    }
-    $table = $requestPostData['table'];
+//    if (!framework_auth_checkPostRequestWithToken()) {
+//        controller_error_401();
+//    }
 
     $correct = false;
 
-    // TODO: exec
+    game_game_compExec();
 
     framework_response_helper_createJsonResponse(
         [
-            'table' => $table,
             'correct' => $correct,
         ]
     );
