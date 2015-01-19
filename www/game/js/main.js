@@ -83,7 +83,8 @@ FideosGame.prototype.reloadButtonClick = function (e) {
                 });
             }
             self.renderTable(self.table);
-
+            $('#userwords').empty();
+            $('#compwords').empty();
 
         }
     });
@@ -107,8 +108,8 @@ FideosGame.prototype.checkButtonClick = function (e) {
             'X-Csrf-Token': fideostoken
         },
         success: function (data) {
-            if (data.data) {
-                $.each(data.data, function (index, value) {
+            if (data.data.table) {
+                $.each(data.data.table, function (index, value) {
                     $.each(value, function (x, cell) {
                         if (cell.letter) {
                             self.table.addCell(index, x, cell.letter);
@@ -117,6 +118,12 @@ FideosGame.prototype.checkButtonClick = function (e) {
                         }
                     });
                 });
+            }
+            if (data.data.correct){
+                self.setStatus('user_ok');
+                self.addUserWord(data.data.word);
+            } else {
+                self.setStatus('user_empty');
             }
             self.renderTable(self.table);
 
@@ -171,7 +178,67 @@ FideosGame.prototype.updateButtonStatus = function () {
             $('#game-check-button').html('Выделите слово');
             $('#game-check-button').attr('disabled', 'disabled');
         }
+    } else if (status == 'user_ok') {
+        $('#game-check-button').html('Ход компьютера');
+        $('#game-check-button').attr('disabled', 'disabled');
+        self.getComputerExec();
     }
+    else if (status == 'finished') {
+        $('#game-check-button').html('Вы выиграли!');
+        $('#game-check-button').attr('disabled', 'disabled');
+    }
+};
+
+FideosGame.prototype.getComputerExec = function() {
+    var self = this;
+    var status = self.status;
+    $.ajax({
+        dataType: "json",
+        type: 'POST',
+        url: '/game/api/comp/exec/',
+        data: {word: word, table: table},
+        context: this,
+        async: false,
+        headers: {
+            'X-Csrf-Token': fideostoken
+        },
+        success: function (data) {
+            if (data.data.table) {
+                $.each(data.data.table, function (index, value) {
+                    $.each(value, function (x, cell) {
+                        if (cell.letter) {
+                            self.table.addCell(index, x, cell.letter);
+                        } else {
+                            self.table.addCell(index, x, null);
+                        }
+                    });
+                });
+            }
+            if (data.data.correct){
+                self.setStatus('user_empty');
+                self.addCompWord(data.data.word);
+            } else{
+                self.setStatus('finished');
+            }
+
+            self.renderTable(self.table);
+
+
+        }
+        //error: handleFailedAjax
+    });
+};
+
+FideosGame.prototype.addCompWord = function(word) {
+    var div = $('<div style="display:block;"></div>');
+    div.append(word);
+    $('#compwords'). prepend(div);
+};
+
+FideosGame.prototype.addUserWord = function(word) {
+    var div = $('<div style="display:block;"></div>');
+    div.append(word);
+    $('#userwords').prepend(div);
 };
 
 FideosGame.prototype.keyUp = function (e) {
@@ -241,12 +308,10 @@ FideosGame.prototype.addCellToWord = function (cell, context) {
 
     var wordLength = self.word.length;
 
-
     var id = cell.attr('id');
 
-
-    re = /gametable-cell-(\d)-(\d)/i;
-    found = id.match(re);
+    var re = /gametable-cell-(\d)-(\d)/i;
+    var found = id.match(re);
     var x = parseInt(found[1], 10); //row
     var y = parseInt(found[2], 10); //cell
 
@@ -369,6 +434,8 @@ FideosGame.prototype.renderTable = function (data) {
                 $('#gametable-cell-' + index + '-' + x).addClass('gametable-td-cell-empty');
                 $('#gametable-cell-' + index + '-' + x + ' > .gametable-cell').html('');
             }
+            $('#gametable-cell-' + index + '-' + x + ' > .gametable-input > input').val('');
+            console.log($('#gametable-cell-' + index + '-' + x + ' > input').val());
 
         });
     });

@@ -91,7 +91,20 @@ div.divgametable {
     padding-bottom: 25px;
 }
 
+div.divresult {
+    text-align: center;
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+
 table.gametable {
+    display: table;
+    border-collapse: collapse;
+    margin: 0 auto;
+    color: #fff;
+}
+
+table.resulttable {
     display: table;
     border-collapse: collapse;
     margin: 0 auto;
