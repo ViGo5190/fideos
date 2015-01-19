@@ -169,8 +169,6 @@ FideosGame.prototype.updateButtonStatus = function () {
         $('#game-check-button').html('Выделите слово');
         $('#game-check-button').attr('disabled', 'disabled');
     } else if (status == 'user_checked') {
-        //console.log('is'+self.isAddedLetterInWord());
-        //if (self.isAddedLetterInWord())
         if ((self.word.length >= 3) && (self.isAddedLetterInWord())) {
             $('#game-check-button').html('Отправить слово');
             $('#game-check-button').removeAttr('disabled');
@@ -345,7 +343,6 @@ FideosGame.prototype.addCellToWord = function (cell, context) {
             self.word.push(letter);
             cell.addClass('gametable-td-cell-selected');
             self.setStatus('user_checked');
-            //console.log('xxx');
         } else if (
             (lettersInWordCount == 0) &&
             (prevLetter.y == letter.y) &&
@@ -354,12 +351,10 @@ FideosGame.prototype.addCellToWord = function (cell, context) {
             self.word.push(letter);
             cell.addClass('gametable-td-cell-selected');
             self.setStatus('user_checked');
-            //console.log('yyy');
         } else if ((prevLetter.y == letter.y) && (prevLetter.x == letter.x)) {
             self.word.pop();
             cell.removeClass('gametable-td-cell-selected');
             self.setStatus('user_checked');
-            //console.log('rem');
         }
 
 
@@ -405,17 +400,6 @@ FideosGame.prototype.loadTable = function () {
 
 FideosGame.prototype.renderTable = function (data) {
     var self = this;
-    //$.each(this.table, function (index, value) {
-    //    $.each(value, function (x, cell) {
-    //        if (cell) {
-    //            $('#gametable-cell-' + index + '-' + x + ' > .gametable-cell').html(cell);
-    //            $('#gametable-cell-' + index + '-' + x).addClass('gametable-td-cell-filled');
-    //        } else {
-    //            $('#gametable-cell-' + index + '-' + x).addClass('gametable-td-cell-empty');
-    //        }
-    //    });
-    //});
-
     if (!data) {
         data = self.table;
     }
@@ -435,7 +419,6 @@ FideosGame.prototype.renderTable = function (data) {
                 $('#gametable-cell-' + index + '-' + x + ' > .gametable-cell').html('');
             }
             $('#gametable-cell-' + index + '-' + x + ' > .gametable-input > input').val('');
-            console.log($('#gametable-cell-' + index + '-' + x + ' > input').val());
 
         });
     });
