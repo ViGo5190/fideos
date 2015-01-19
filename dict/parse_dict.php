@@ -27,8 +27,6 @@ if (file_exists($filename)) {
 
         $line = fgets($file_handle);
         game_word_wordAdd($line);
-//        game_word_wordAdd('издатель');
-//        break;
         game_word_wordAddRevertPostFix($line);
         unset($line);
     }

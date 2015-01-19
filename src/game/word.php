@@ -42,6 +42,10 @@ function game_word_getAlphabet()
     ];
 }
 
+/**
+ * Create direct tree of words
+ * @param $word
+ */
 function game_word_wordAdd($word)
 {
     $word = trim($word);
@@ -80,7 +84,6 @@ function game_word_wordAdd($word)
 
         framework_memcache_set($cmkeycurrent, $nodeCurrent, $time);
 
-//        echo $cmckeyparent. PHP_EOL;
 
         $nodeParent = framework_memcache_get($cmckeyparent);
         if (!$nodeParent) {
@@ -98,12 +101,15 @@ function game_word_wordAdd($word)
 
         framework_memcache_set($cmckeyparent, $nodeParent, $time);
 
-//        var_dump($nodeParent);
         unset($nodeParent);
         unset($nodeCurrent);
     }
 }
 
+/**
+ * Create indirect prefix tree of words.
+ * @param $word
+ */
 function game_word_wordAddRevertPostFix($word)
 {
     $mckey = TREE_REVERT_POSTFIX_KEY;
@@ -125,13 +131,10 @@ function game_word_wordAddRevertPostFix($word)
         $prefixReverted = framework_helper_mbStrRev($prefix);
 
         $prefixRevertedLength = mb_strlen($prefixReverted);
-//        echo $prefixRevertedLength;
         for ($k = 0; $k < $prefixRevertedLength; $k++) {
             $letter2 = mb_substr($prefixReverted, (int) $k, 1, 'UTF8');
-//            echo ">" . $letter2;
 
             $cmkeycurrent = $mckey . mb_substr($prefixReverted, 0, (int) $k + 1, 'UTF8');
-//            echo "&" . $cmkeycurrent . '&';
 
             //////
             $nodeCurrent = framework_memcache_get($cmkeycurrent);
@@ -165,7 +168,6 @@ function game_word_wordAddRevertPostFix($word)
             }
 
             if (($key + 1 == $l) && ($k + 1 == $l)) {
-//                echo $word . PHP_EOL;
                 $nodeCurrent['wrd'] = $word;
             }
 
@@ -207,9 +209,14 @@ function game_word_wordAddRevertPostFix($word)
     }
 }
 
+/**
+ * Check if use word is exist
+ * @param $word
+ * @return bool
+ */
 function game_word_checkWordUser($word)
 {
-    $word = game_word_convertWord($word);
+    $word = game_word_clearWord($word);
 
     $mckey = TREE_KEY;
 
@@ -229,69 +236,32 @@ function game_word_checkWordUser($word)
 }
 
 /**
- * @deprecated
+ * Find word in indirect prefix tree
+ * @param $table
  * @param $x
  * @param $y
- * @param $word
+ * @param $n
  * @param $words
+ * @param $startx
+ * @param $starty
+ * @param $letter
  */
-function game_word_checkRevertPostFix($x, $y, $word, &$words)
+function game_word_checkRevertPostFixTree($table, $x, $y, $n, &$words, $startx, $starty, $letter)
 {
-    $table = game_game_getUserTable();
-    $mckey = TREE_REVERT_POSTFIX_KEY;
-    $mckeyPrefixRoot = 'root';
-    $word = trim($word);
-    $l = mb_strlen($word);
-    $termSymbol = '$';
-
-    $words = [];
-    foreach (game_word_getAlphabet() as $letter) {
-        $table[$x][$y]['var'] = $letter;
-        $table[$x][$y]['used'] = 0;
-        $mckey = TREE_REVERT_POSTFIX_KEY;
-        $n = framework_memcache_get($mckey . $letter);
-
-        game_word_checkRevertPostFixFoo($table, $x, $y, $n, $words);
-    }
-}
-
-function game_word_checkRevertPostFixFoo($table, $x, $y, $n, &$words, $startx, $starty, $letter)
-{
-    $mckey = TREE_REVERT_POSTFIX_KEY;
-
     if ($n['wrd'] != false) {
-        if (mb_strlen($n['wrd']) >= 0) {
-//            if (!in_array($n['wrd'], $words)) {
-            if (!isset($words[$n['wrd']])) {
-//                $words[$n['wrd']] = [
-//                    'wrd'    => $n['wrd'],
-//                    'x'      => $startx,
-//                    'y'      => $starty,
-//                    'letter' => $letter,
-//                ];
-                addToList([
-                    'wrd'    => $n['wrd'],
-                    'x'      => $startx,
-                    'y'      => $starty,
-                    'letter' => $letter,
-                ]);
-//                echo '!!';
-            }
+        if (mb_strlen($n['wrd']) >= 3) {
+            addToList([
+                'wrd'    => $n['wrd'],
+                'x'      => $startx,
+                'y'      => $starty,
+                'letter' => $letter,
+            ]);
         }
     }
 
     if (in_array('$', $n['letters'])) {
-//        echo '$' . $n['cur'] . " " . $n['wrd'] . "<br>" .PHP_EOL;
-        // search
         $nn = framework_memcache_get(TREE_KEY . $n['cur']);
-//        var_dump("@" . $startx . ' x '. $starty . '@');
-//        echo "<pre>";
-//        var_dump($nn);
-//        echo "</pre>";
         game_word_checkTree($table, $startx, $starty, $nn, $words, $startx, $starty, $letter);
-//        echo "<pre>";
-//        var_dump($nn);
-//        echo "</pre>";
     }
 
     if (isset($table[$x - 1]) && ($table[$x - 1][$y]['letter'] != "")) {
@@ -303,7 +273,7 @@ function game_word_checkRevertPostFixFoo($table, $x, $y, $n, &$words, $startx, $
                 $i = array_search($table[$x - 1][$y]['letter'], $n['letters']);
                 $nn = framework_memcache_get($n['link'][$i]);
                 $table[$x - 1][$y]['used']--;
-                game_word_checkRevertPostFixFoo($table, $x - 1, $y, $nn, $words, $startx, $starty, $letter);
+                game_word_checkRevertPostFixTree($table, $x - 1, $y, $nn, $words, $startx, $starty, $letter);
                 $table[$x - 1][$y]['used']++;
             }
         }
@@ -319,7 +289,7 @@ function game_word_checkRevertPostFixFoo($table, $x, $y, $n, &$words, $startx, $
                 $i = array_search($table[$x + 1][$y]['letter'], $n['letters']);
                 $nn = framework_memcache_get($n['link'][$i]);
                 $table[$x + 1][$y]['used']--;
-                game_word_checkRevertPostFixFoo($table, $x + 1, $y, $nn, $words, $startx, $starty, $letter);
+                game_word_checkRevertPostFixTree($table, $x + 1, $y, $nn, $words, $startx, $starty, $letter);
                 $table[$x + 1][$y]['used']++;
             }
         }
@@ -334,7 +304,7 @@ function game_word_checkRevertPostFixFoo($table, $x, $y, $n, &$words, $startx, $
                 $i = array_search($table[$x][$y - 1]['letter'], $n['letters']);
                 $nn = framework_memcache_get($n['link'][$i]);
                 $table[$x][$y - 1]['used']--;
-                game_word_checkRevertPostFixFoo($table, $x, $y - 1, $nn, $words, $startx, $starty, $letter);
+                game_word_checkRevertPostFixTree($table, $x, $y - 1, $nn, $words, $startx, $starty, $letter);
                 $table[$x][$y - 1]['used']++;
             }
         }
@@ -349,37 +319,36 @@ function game_word_checkRevertPostFixFoo($table, $x, $y, $n, &$words, $startx, $
                 $i = array_search($table[$x][$y + 1]['letter'], $n['letters']);
                 $nn = framework_memcache_get($n['link'][$i]);
                 $table[$x][$y + 1]['used']--;
-                game_word_checkRevertPostFixFoo($table, $x, $y + 1, $nn, $words, $startx, $starty, $letter);
+                game_word_checkRevertPostFixTree($table, $x, $y + 1, $nn, $words, $startx, $starty, $letter);
                 $table[$x][$y + 1]['used']++;
             }
         }
     }
 }
 
+/**
+ * Find word in direct tree
+ * @param $table
+ * @param $x
+ * @param $y
+ * @param $n
+ * @param $words
+ * @param $startx
+ * @param $starty
+ * @param $letter
+ */
 function game_word_checkTree($table, $x, $y, $n, &$words, $startx, $starty, $letter)
 {
     $mckey = TREE_REVERT_POSTFIX_KEY;
 
-
     if ($n['wrd'] != false) {
-        if (mb_strlen($n['wrd']) >= 0) {
-            if (!isset($words[$n['wrd']])) {
-//                if ($n['wrd']=="баклажан"){
-//                    echo "------------!<pre>";
-//var_dump($n);
-//var_dump($x);
-//var_dump($y);
-//var_dump($table);
-//                    echo "</pre>";
-//                    die();
-//                }
-                addToList([
-                    'wrd'    => $n['wrd'],
-                    'x'      => $startx,
-                    'y'      => $starty,
-                    'letter' => $letter,
-                ]);
-            }
+        if (mb_strlen($n['wrd']) >= 3) {
+            addToList([
+                'wrd'    => $n['wrd'],
+                'x'      => $startx,
+                'y'      => $starty,
+                'letter' => $letter,
+            ]);
         }
     }
     if (isset($table[$x - 1]) && ($table[$x - 1][$y]['letter'] != "")) {
@@ -405,10 +374,6 @@ function game_word_checkTree($table, $x, $y, $n, &$words, $startx, $starty, $let
             if ($table[$x + 1][$y]['used'] > 0) {
                 $i = array_search($table[$x + 1][$y]['letter'], $n['letters']);
                 $nn = framework_memcache_get($n['link'][$i]);
-//                var_dump("$$$" . $table[$x + 1][$y]['letter']."$".$x.'$'.$y. '$$$');
-//                var_dump("$!");
-//                if ($table[$x + 1][$y]['letter'] == "л") {var_dump($n);}
-//                var_dump("!$");
                 $table[$x + 1][$y]['used']--;
                 game_word_checkTree($table, $x + 1, $y, $nn, $words, $startx, $starty, $letter);
                 $table[$x + 1][$y]['used']++;
@@ -429,16 +394,6 @@ function game_word_checkTree($table, $x, $y, $n, &$words, $startx, $starty, $let
             }
         }
     }
-//    echo "<pre>";
-//    var_dump("--------");
-//    var_dump($n);
-//    var_dump($x);
-//    var_dump($y);
-//    var_dump($table[$x - 1][$y]['letter']);
-//    var_dump($table[$x + 1][$y]['letter']);
-//    var_dump($table[$x][$y-1]['letter']);
-//    var_dump($table[$x][$y+1]['letter']);
-//    echo "</pre>";
     if (isset($table[$x][$y + 1]) && ($table[$x][$y + 1]['letter'] != "")) {
         if (in_array($table[$x][$y + 1]['letter'], $n['letters'])) {
 //            var_dump("xy+1");
@@ -449,9 +404,6 @@ function game_word_checkTree($table, $x, $y, $n, &$words, $startx, $starty, $let
                 $i = array_search($table[$x][$y + 1]['letter'], $n['letters']);
                 $nn = framework_memcache_get($n['link'][$i]);
                 $table[$x][$y + 1]['used']--;
-//                var_dump($table[$x][$y + 1]['letter']);
-//                var_dump($i);
-//                var_dump($y);
                 game_word_checkTree($table, $x, $y + 1, $nn, $words, $startx, $starty, $letter);
                 $table[$x][$y + 1]['used']++;
             }
@@ -459,7 +411,12 @@ function game_word_checkTree($table, $x, $y, $n, &$words, $startx, $starty, $let
     }
 }
 
-function  game_word_convertWord($word)
+/**
+ * Clear word from spaces, convert to lower case, convert "ё" into  "е"
+ * @param $word
+ * @return string
+ */
+function  game_word_clearWord($word)
 {
     $word = trim($word);
     $word = mb_strtolower($word);
@@ -467,12 +424,15 @@ function  game_word_convertWord($word)
     return $word;
 }
 
-
+/**
+ * Add word to list of finded words
+ * @param $word
+ */
 function addToList($word)
 {
 
     $words = game_game_getFindWords();
-    if (!in_array($word['wrd'], $words)){
+    if (!in_array($word['wrd'], $words)) {
         $words[$word['wrd']] = $word;
     }
     game_game_setFindWords($words);
