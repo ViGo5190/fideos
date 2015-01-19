@@ -240,14 +240,8 @@ function game_game_checkUserWord($word)
         return FIDEOS_GAME_USER_WORD_STATUS_TO_SHORT;
     }
 
-    //check word!
-
-//    var_dump($word);die();
 
     $wordStr = game_game_wordArrayToStr($word);
-    if (!$wordStr) {
-        //
-    }
 
     if (game_game_checkWordInUsedWords($wordStr)) {
         framework_profiler_stopProfileEvent('game_game_checkUserWord');
@@ -332,8 +326,6 @@ function game_game_addWordToWordsList($word)
 function game_game_checkWordInUsedWords($word)
 {
     $words = game_game_getUsedWords();
-//    var_dump($word);
-//    var_dump($words);
     if (in_array($word, $words)) {
         return true;
     }
