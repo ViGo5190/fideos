@@ -42,6 +42,10 @@ function game_word_getAlphabet()
     ];
 }
 
+/**
+ * Create direct tree of words
+ * @param $word
+ */
 function game_word_wordAdd($word)
 {
     $word = trim($word);
@@ -102,6 +106,10 @@ function game_word_wordAdd($word)
     }
 }
 
+/**
+ * Create indirect prefix tree of words.
+ * @param $word
+ */
 function game_word_wordAddRevertPostFix($word)
 {
     $mckey = TREE_REVERT_POSTFIX_KEY;
@@ -201,9 +209,14 @@ function game_word_wordAddRevertPostFix($word)
     }
 }
 
+/**
+ * Check if use word is exist
+ * @param $word
+ * @return bool
+ */
 function game_word_checkWordUser($word)
 {
-    $word = game_word_convertWord($word);
+    $word = game_word_clearWord($word);
 
     $mckey = TREE_KEY;
 
@@ -222,10 +235,19 @@ function game_word_checkWordUser($word)
     return true;
 }
 
-function game_word_checkRevertPostFixFoo($table, $x, $y, $n, &$words, $startx, $starty, $letter)
+/**
+ * Find word in indirect prefix tree
+ * @param $table
+ * @param $x
+ * @param $y
+ * @param $n
+ * @param $words
+ * @param $startx
+ * @param $starty
+ * @param $letter
+ */
+function game_word_checkRevertPostFixTree($table, $x, $y, $n, &$words, $startx, $starty, $letter)
 {
-    $mckey = TREE_REVERT_POSTFIX_KEY;
-
     if ($n['wrd'] != false) {
         if (mb_strlen($n['wrd']) >= 3) {
             addToList([
@@ -251,7 +273,7 @@ function game_word_checkRevertPostFixFoo($table, $x, $y, $n, &$words, $startx, $
                 $i = array_search($table[$x - 1][$y]['letter'], $n['letters']);
                 $nn = framework_memcache_get($n['link'][$i]);
                 $table[$x - 1][$y]['used']--;
-                game_word_checkRevertPostFixFoo($table, $x - 1, $y, $nn, $words, $startx, $starty, $letter);
+                game_word_checkRevertPostFixTree($table, $x - 1, $y, $nn, $words, $startx, $starty, $letter);
                 $table[$x - 1][$y]['used']++;
             }
         }
@@ -267,7 +289,7 @@ function game_word_checkRevertPostFixFoo($table, $x, $y, $n, &$words, $startx, $
                 $i = array_search($table[$x + 1][$y]['letter'], $n['letters']);
                 $nn = framework_memcache_get($n['link'][$i]);
                 $table[$x + 1][$y]['used']--;
-                game_word_checkRevertPostFixFoo($table, $x + 1, $y, $nn, $words, $startx, $starty, $letter);
+                game_word_checkRevertPostFixTree($table, $x + 1, $y, $nn, $words, $startx, $starty, $letter);
                 $table[$x + 1][$y]['used']++;
             }
         }
@@ -282,7 +304,7 @@ function game_word_checkRevertPostFixFoo($table, $x, $y, $n, &$words, $startx, $
                 $i = array_search($table[$x][$y - 1]['letter'], $n['letters']);
                 $nn = framework_memcache_get($n['link'][$i]);
                 $table[$x][$y - 1]['used']--;
-                game_word_checkRevertPostFixFoo($table, $x, $y - 1, $nn, $words, $startx, $starty, $letter);
+                game_word_checkRevertPostFixTree($table, $x, $y - 1, $nn, $words, $startx, $starty, $letter);
                 $table[$x][$y - 1]['used']++;
             }
         }
@@ -297,13 +319,24 @@ function game_word_checkRevertPostFixFoo($table, $x, $y, $n, &$words, $startx, $
                 $i = array_search($table[$x][$y + 1]['letter'], $n['letters']);
                 $nn = framework_memcache_get($n['link'][$i]);
                 $table[$x][$y + 1]['used']--;
-                game_word_checkRevertPostFixFoo($table, $x, $y + 1, $nn, $words, $startx, $starty, $letter);
+                game_word_checkRevertPostFixTree($table, $x, $y + 1, $nn, $words, $startx, $starty, $letter);
                 $table[$x][$y + 1]['used']++;
             }
         }
     }
 }
 
+/**
+ * Find word in direct tree
+ * @param $table
+ * @param $x
+ * @param $y
+ * @param $n
+ * @param $words
+ * @param $startx
+ * @param $starty
+ * @param $letter
+ */
 function game_word_checkTree($table, $x, $y, $n, &$words, $startx, $starty, $letter)
 {
     $mckey = TREE_REVERT_POSTFIX_KEY;
@@ -378,7 +411,12 @@ function game_word_checkTree($table, $x, $y, $n, &$words, $startx, $starty, $let
     }
 }
 
-function  game_word_convertWord($word)
+/**
+ * Clear word from spaces, convert to lower case, convert "ё" into  "е"
+ * @param $word
+ * @return string
+ */
+function  game_word_clearWord($word)
 {
     $word = trim($word);
     $word = mb_strtolower($word);
@@ -386,6 +424,10 @@ function  game_word_convertWord($word)
     return $word;
 }
 
+/**
+ * Add word to list of finded words
+ * @param $word
+ */
 function addToList($word)
 {
 

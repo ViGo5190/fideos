@@ -194,7 +194,7 @@ function game_game_compExec()
                     $mckey = TREE_REVERT_POSTFIX_KEY;
                     $n = framework_memcache_get($mckey . $letter);
 
-                    game_word_checkRevertPostFixFoo($table, $x, $y, $n, $words, $x, $y, $letter);
+                    game_word_checkRevertPostFixTree($table, $x, $y, $n, $words, $x, $y, $letter);
                 }
             }
         }
