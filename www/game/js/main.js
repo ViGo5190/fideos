@@ -434,6 +434,8 @@ FideosGame.prototype.renderTable = function (data) {
                 $('#gametable-cell-' + index + '-' + x).addClass('gametable-td-cell-empty');
                 $('#gametable-cell-' + index + '-' + x + ' > .gametable-cell').html('');
             }
+            $('#gametable-cell-' + index + '-' + x + ' > .gametable-input > input').val('');
+            console.log($('#gametable-cell-' + index + '-' + x + ' > input').val());
 
         });
     });
