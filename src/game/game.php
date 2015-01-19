@@ -269,7 +269,7 @@ function game_game_wordArrayToStr($word)
 {
     $s = '';
     foreach ($word as $letter) {
-        $s .= $letter['val'];
+        $s .= mb_strtolower($letter['val']);
     }
     return $s;
 }
@@ -284,7 +284,7 @@ function game_game_addLetterFromUserWordToTableFromWord($word, $table)
     }
 
     if ($letterAdded) {
-        $table[$letterAdded['x']][$letterAdded['y']]['letter'] = $letterAdded['val'];
+        $table[$letterAdded['x']][$letterAdded['y']]['letter'] = mb_strtolower($letterAdded['val']);
     }
 
     game_game_setUserTable($table);
